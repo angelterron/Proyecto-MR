@@ -83,8 +83,6 @@ void menuCliente(Maquina **inicioM){
         }
 }
 
-
-//Si estan bien esos parametros? Si, estan super bien < 3 :) que mas procd? te voy a enviar las funciones de busqueda por ubicacion oc oie , eu modifique aquí
 void MenuProductos(Maquina **inicioM,int tipo, int ID){
 
         int op;
@@ -114,7 +112,7 @@ void MenuProductos(Maquina **inicioM,int tipo, int ID){
                 //fun insertar
                 system("clear");
                 break;
-        case 3: 
+        case 3:
                 //fun eliminar
                 system("clear");
                 break;
@@ -192,13 +190,13 @@ void AdministrarMaquina(Maquina **inicioM,int tipo){
                 EstadoMaquina(inicioM,tipo);
                 system("clear");
                 break;
-        case 3: 
+        case 3:
                 system("clear");
                 break;
-        default: 
+        default:
         system("clear");
         printf("\nOpci%cn no valida.\n",162);
-                 
+
         }
     }while(op!=3);
 }
@@ -227,7 +225,7 @@ void MenuProveedor(Maquina **inicioM){
                 AdministrarMaquina(inicioM,2);
                 system("clear");
                 break;
-        case 3: 
+        case 3:
                 system("clear");
                 break;
         default: printf("\nOpci%cn no valida.\n",162);
@@ -238,7 +236,7 @@ void MenuProveedor(Maquina **inicioM){
 
 int main(){
     char ubicacion[30];
-    Maquina *inicioM=NULL;//que apunte a null al inicio v: Ah si, tambien se lo puse yo te mando este v:? si, y te mando el mio deja lo valido y te lo mando UwU Ok uwu <3 vas a seguir viendome :v? nel, seguire con el codigo :u :u
+    Maquina *inicioM=NULL;
     int op;
     do{
          system("clear");
@@ -263,9 +261,8 @@ int main(){
         case 3: break;
         default: system("clear");
                 printf("\nOpci%cn no valida.\n",162);
-                 
+
         }
     }while(op!=3);
     return 0;
 }
-//Es magia negra :o aguanta que no me aparece a mi el cambio :vvv
