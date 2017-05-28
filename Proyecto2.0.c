@@ -268,3 +268,4 @@ int main(){
     }while(op!=3);
     return 0;
 }
+//Es magia negra :o aguanta que no me aparece a mi el cambio :vvv
