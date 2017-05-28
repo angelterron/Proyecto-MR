@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+//variables globales
+int IDMaquina=0;
+
 typedef struct Producto{
     int dia;
     int mes;
@@ -83,6 +87,20 @@ void menuCliente(Maquina **inicioM){
         }
 }
 
+void MostrarProductos(Maquina **inicioM,int tipo, int ID){
+        printf("-------------------------------------- ");
+        printf("\n| Productos disponibles en maquina: %d |",(*inicioM)->ID);
+        printf("\n -------------------------------------- ");
+        if(tipo==1)
+        printf("\n| Tipo: Refrescos                     |");
+        else
+        printf("\n| Tipo: Golosina                      |");
+        printf("\n ------------------------------------- ");
+        //funcion imprimir productos de ID maquina
+        printf("\n");
+        system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
+}
+
 void MenuProductos(Maquina **inicioM,int tipo, int ID){
 
         int op;
@@ -93,7 +111,8 @@ void MenuProductos(Maquina **inicioM,int tipo, int ID){
         printf("\n|1.-Registrar productor           |");
         printf("\n|2.-Insertar producto             |");
         printf("\n|3.-Eliminar producto             |");
-        printf("\n|4.-Regresar                      |");
+        printf("\n|4.-Mostrar productos             |");
+        printf("\n|5.-Regresar                      |");
         printf("\n -------------------------------- ");
         if(tipo==1)
         printf("\n| Tipo: Refrescos                 |");
@@ -105,26 +124,46 @@ void MenuProductos(Maquina **inicioM,int tipo, int ID){
         switch(op){
         case 1:
                 //fun registrar
-                //system("clear");
-                system("cls");
+                system("clear");
+                //system("cls");
                 break;
         case 2:
                 //fun insertar
-                //system("clear");
-                system("cls");
+                system("clear");
+                //system("cls");
                 break;
         case 3:
                 //fun eliminar
-                //system("clear");
-                system("cls");
+                system("clear");
+                //system("cls");
                 break;
         case 4:
+
+                system("clear");
+                //system("cls")
+                break;
+        case 5:
                 break;
         default: printf("\nOpci%cn no valida.\n",162);
         }
         //system("clear");
         system("cls");
-    }while(op!=4);
+    }while(op!=5);
+}
+
+void RegistrarMaquina(Maquina **inicioM,int tipo, char ubicacion[30]){
+    Maquina *NuevaMaquina= (Maquina *) malloc (sizeof(Maquina));
+    if(!(NuevaMaquina)){
+        printf("No se pudo reservar la memoria\n");
+        system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
+        return ;
+    }
+    strcpy(NuevaMaquina->ubicacion,ubicacion);
+    NuevaMaquina->tipo=tipo;
+    NuevaMaquina->ID=++IDMaquina;
+    NuevaMaquina->inicioE=NULL;
+    NuevaMaquina->siguienteM = (*inicioM);
+    (*inicioM) = NuevaMaquina;
 }
 
 void ComprarMaquina(Maquina **inicioM,int tipo){
@@ -137,23 +176,25 @@ void ComprarMaquina(Maquina **inicioM,int tipo){
         while(getchar()!='\n');
         printf("Escriba la ubicacion de la maquina: ");
         scanf("%[^\n]",ubicacion);
-        //funcion insertar Maquina en Lista
+        RegistrarMaquina(inicioM,tipo,ubicacion);
         if((*inicioM)!=NULL)
-            printf("Maquina registrada con exito\n");
+            {
+                printf("ID %d\n",(*inicioM)-> ID);
+                printf("Maquina registrada con exito\n");}
         else
             printf("Maquina no creada\n");
-        //system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
-        system("pause");
+        system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
+        //system("pause");
 }
 
 
 void EstadoMaquina(Maquina **inicioM,int tipo){
     if((*inicioM)==NULL){
         printf("No se han agregado maquinas\n");
-        //system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
-        //system("clear");
-        system("pause");
-        system("cls");
+        system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
+        system("clear");
+        //system("pause");
+        //system("cls");
         return;
     }
     int idmaquina;
