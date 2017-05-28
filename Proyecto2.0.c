@@ -61,7 +61,7 @@ int buscarPorUbicacion(Maquina **inicio, char ubicacion[30]){
 void imprimirPorUbicacion(Maquina **inicio, char ubicacion[30]){
     if(!(*inicio))
         return;
-    if(strcmp(ubicacion,(*inicio)->ubicacion)== 1){
+    if(strcmp(ubicacion,(*inicio)->ubicacion)== 0){
         if((*inicio)->tipo == 1 && (*inicio)->inicioE != NULL){
             printf("%d Maquina de Refrescos.\n\tContenido: ",(*inicio)->ID);
             imprimirContenidoM(&(*inicio)->inicioE,1);
@@ -75,9 +75,14 @@ void imprimirPorUbicacion(Maquina **inicio, char ubicacion[30]){
 }
 
 Espiral* buscarProducto(Espiral **inicio,char idP[2]){
-    if(!(*inicio))
+    
+    if(!(*inicio)){
+        printf("EL PUNTERO ES NULO!");
         return NULL;
+    }
+    printf("\n%s - %s\n",(*inicio)->ID,idP);
     if(strcmp((*inicio)->ID,idP)==0){
+        printf("hola\n");
         return (*inicio);
     }else{
         return buscarProducto(&(*inicio)->siguienteE,idP);
@@ -169,11 +174,14 @@ void MostrarProductos(Maquina **inicioM,int tipo, int ID){
 }
 
 void RegistrarProducto(Maquina **inicioM, char nombre[30], int cantidad, char IDProducto[2],int precio){
-    Espiral *EspiralM= (Espiral *) malloc(sizeof(Espiral));
+    printf("Hol1\n");
+    Espiral *EspiralM= (Espiral*) malloc(sizeof(struct Espiral));
+    printf("Holi2");
     if(!EspiralM){
         printf("No se pudo reservar la memoria\n");
         return;
     }
+    printf("Holi");
     strcpy(EspiralM->nombre,nombre);
     strcpy(EspiralM->ID,IDProducto);
     EspiralM->precio=precio;
@@ -186,11 +194,10 @@ void RegistrarProducto(Maquina **inicioM, char nombre[30], int cantidad, char ID
 void RegistroDeProductos(Maquina **inicioM){
     char nombre[30],IDProducto[2];
     int cantidad,precio;
-    Espiral *aux=NULL;
+    Espiral *aux;
         printf(" -------------------------------- ");
         printf("\n| Administracion de productos |");
         printf("\n -------------------------------- ");
-        printf("\n%s",(*inicioM)->ubicacion);
         while(getchar()!='\n');
         printf("\nIngrese el nombre del producto: ");
         scanf("%[^\n]",nombre);
@@ -208,24 +215,22 @@ void RegistroDeProductos(Maquina **inicioM){
         while(getchar()!='\n');
         printf("Ingrese el ID del producto (Ej: A0): ");
         scanf("%[^\n]",IDProducto);
-            while(getchar()!='\n');
             if(IDProducto[0]<65 || IDProducto[0]>70)
-               {printf("Tiene que iniciar con una letra\n");
-                system("read -n 1 -s -p \"Presiona una tecla para re intentar...\"");}
+                printf("Tiene que iniciar con una letra\n");
             if ( IDProducto[1]<48 || IDProducto[1]>57 )
-                {printf("La segunda letra debe ser un numero entre 0 y 9\n");
-                system("read -n 1 -s -p \"Presiona una tecla para re intentar...\"");}
-                printf("Hola\n");
-          aux=buscarProducto(&(*inicioM)->inicioE,IDProducto);
-          printf("Hola1\n");
-          if(aux!=NULL){
+                printf("La segunda letra debe ser un numero entre 0 y 9\n");
+          //aux=buscarProducto(&(*inicioM)->inicioE,IDProducto);
+          /*if(aux!=NULL){
             printf("ID repetido, ingrese otro ID\n");
             system("read -n 1 -s -p \"Presiona una tecla para re intentar...\"");
-          }
-        }while( aux!=NULL || (IDProducto[0]<65 || IDProducto[0]>70) || (  IDProducto[1]<48 || IDProducto[1]>57) );
-        RegistrarProducto(&(*inicioM),nombre,cantidad,IDProducto,precio);
+          }*/
+        }while( (IDProducto[0]<65 || IDProducto[0]>70) || (  IDProducto[1]<48 || IDProducto[1]>57) );
+        RegistrarProducto(inicioM,nombre,cantidad,IDProducto,precio);
         printf("1: %s\n",(*inicioM)->inicioE->nombre );
         printf("1. %s\n",(*inicioM)->inicioE->ID );
+        //printf("2: %s\n",inicioM->inicioE->siguienteE->nombre );
+        //printf("2. %s\n",inicioM->inicioE->siguienteE->ID );
+
 }
 
 void MostrarProductos(Maquina *inicioM){
@@ -388,7 +393,7 @@ void AdministrarMaquina(Maquina **inicioM,int tipo){
         case 2:
                 //system("clear");
                 system("cls");
-                EstadoMaquina(&(*inicioM),tipo);
+                EstadoMaquina(inicioM,tipo);
                 break;
         case 3:
                 //system("clear");
