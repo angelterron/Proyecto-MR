@@ -44,10 +44,10 @@ void imprimirContenidoM(Espiral **inicio, int tipo){
     if(!(*inicio))
         return;
     if(tipo == 1){
-        printf("\n\t\t%s $%d %dml.",(*inicio)->nombre,(*inicio)->precio,(*inicio)->cantidad);
+        printf("\n\t\t %s %s $%d %dml.",(*inicio)->ID,(*inicio)->nombre,(*inicio)->precio,(*inicio)->cantidad);
     }
     if(tipo == 2){
-        printf("\n\t\t%s $%d %dgr.",(*inicio)->nombre,(*inicio)->precio,(*inicio)->cantidad);
+        printf("\n\t\t %s %s $%d %dgr.",(*inicio)->ID,(*inicio)->nombre,(*inicio)->precio,(*inicio)->cantidad);
     }
     return imprimirContenidoM(&(*inicio)->siguienteE,tipo);
 }
@@ -75,7 +75,7 @@ void imprimirPorUbicacion(Maquina **inicio, char ubicacion[30]){
 }
 
 Espiral* buscarProducto(Espiral **inicio,char idP[2]){
-    
+
     if(!(*inicio)){
         printf("EL PUNTERO ES NULO!");
         return NULL;
@@ -201,6 +201,7 @@ void RegistroDeProductos(Maquina **inicioM){
         while(getchar()!='\n');
         printf("\nIngrese el nombre del producto: ");
         scanf("%[^\n]",nombre);
+        printf("\n%s",nombre);
         if((*inicioM)->tipo==1)
             printf("Ingrese los ML del producto: ");
         else
@@ -225,27 +226,16 @@ void RegistroDeProductos(Maquina **inicioM){
             system("read -n 1 -s -p \"Presiona una tecla para re intentar...\"");
           }*/
         }while( (IDProducto[0]<65 || IDProducto[0]>70) || (  IDProducto[1]<48 || IDProducto[1]>57) );
+        printf("%s 1",nombre);
         RegistrarProducto(inicioM,nombre,cantidad,IDProducto,precio);
-        printf("1: %s\n",(*inicioM)->inicioE->nombre );
+        printf("1: %s\n",(*inicioM)->inicioE->nombre);
         printf("1. %s\n",(*inicioM)->inicioE->ID );
+        system("pause");
         //printf("2: %s\n",inicioM->inicioE->siguienteE->nombre );
         //printf("2. %s\n",inicioM->inicioE->siguienteE->ID );
 
 }
 
-void MostrarProductos(Maquina *inicioM){
-        printf("-------------------------------------- ");
-        printf("\n| Productos disponibles en maquina: %d |",inicioM->ID);
-        printf("\n -------------------------------------- ");
-        if(inicioM->tipo==1)
-        printf("\n| Tipo: Refrescos                     |");
-        else
-        printf("\n| Tipo: Golosina                      |");
-        printf("\n ------------------------------------- ");
-        imprimirContenidoM(&inicioM->inicioE,inicioM->tipo);
-        printf("\n");
-        system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
-}
 
 void MenuProductos(Maquina **inicioM){
     int op;
@@ -268,7 +258,7 @@ void MenuProductos(Maquina **inicioM){
         scanf("%d",&op);
         switch(op){
         case 1:
-                RegistroDeProductos(&(*inicioM));
+                RegistroDeProductos(inicioM);
                 system("clear");
                 //system("cls");
                 break;
@@ -283,7 +273,8 @@ void MenuProductos(Maquina **inicioM){
                 //system("cls");
                 break;
         case 4:
-
+                imprimirContenidoM(&(*inicioM)->inicioE,(*inicioM)->tipo);
+                system("pause");
                 system("clear");
                 //system("cls")
                 break;
