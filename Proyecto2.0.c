@@ -29,15 +29,27 @@ typedef struct Maquina{
     struct Espiral *inicioE;
     struct Maquina *siguienteM;
 }Maquina;
-
+Producto* pop(Producto **tope){
+    Producto *aux = (*tope);
+    (*tope) = (*tope)->siguienteP;
+    return aux;
+}
+Maquina* buscarMaquina(Maquina **inicio,int idM){
+    if(!(*inicio))
+        return NULL;
+    if((*inicio)->ID == idM){
+        return (*inicio);
+    }
+    return buscarMaquina(&(*inicio)->siguienteM,idM);
+}
 void imprimirContenidoM(Espiral **inicio, int tipo){
     if(!(*inicio))
         return;
-    if(tipo == 1){
-        printf("\n\t\t%s $%d %dml.",(*inicio)->nombre,(*inicio)->precio,(*inicio)->cantidad);
+    if(tipo == 1 && (*inicio)->tope!=NULL){
+        printf("\n\t\t%s %s $%d %dml.",(*inicio)->ID,(*inicio)->nombre,(*inicio)->precio,(*inicio)->cantidad);
     }
-    if(tipo == 2){
-        printf("\n\t\t%s $%d %dgr.",(*inicio)->nombre,(*inicio)->precio,(*inicio)->cantidad);
+    if(tipo == 2 && (*inicio)->tope!=NULL){
+        printf("\n\t\t%s %s $%d %dgr.",(*inicio)->ID,(*inicio)->nombre,(*inicio)->precio,(*inicio)->cantidad);
     }
     return imprimirContenidoM(&(*inicio)->siguienteE,tipo);
 }
@@ -63,16 +75,67 @@ void imprimirPorUbicacion(Maquina **inicio, char ubicacion[30]){
     }
     return imprimirPorUbicacion(&(*inicio)->siguienteM,ubicacion);
 }
+Espiral* buscarProducto(Espiral **inicio,char idP[2]){
+    if(!(*inicio))
+        return NULL;
+    if(strcmp((*inicio)->ID,idP)==1){
+        return (*inicio);
+    }else{
+        return buscarProducto(&(*inicio)->siguienteE,idP);
+    }
+}
+void despacharProducto(Espiral **inicio, int tipo){
+    int credito = 0, moneda;
+    do{
+        printf("\nRefresco: %s",(*inicio)->nombre);
+        printf("\nPrecio: %d",(*inicio)->precio);
+        if(tipo == 1)printf("\nCantidad: %d ml",(*inicio)->cantidad);
+        if(tipo == 2)printf("\nCantidad: %d gr",(*inicio)->cantidad);
+        printf("\n0.- Regresar");
+        printf("\nCredito: %d",credito);
+        printf("\nIngrese una moneda: ");
+        scanf("%d",&moneda);
+        credito = credito + moneda;
+    }while(credito<(*inicio)->precio && moneda != 0) ;
+    if(moneda!=0)printf("\nCambio: ",(credito-(*inicio)->precio));
+    else printf("\nCambio: ",credito);
+    printf("\nGRACIAS POR USAR MAQUINAS AA!\n");
+    system("pause");
+}
 void menuCliente(Maquina **inicioM){
-        char ubicacion[30];
+        char ubicacion[30],idP[2];
+        Maquina *auxMaquina;
+        Espiral *auxEspiral;
+        int idM;
         if((*inicioM) != NULL){
             while(getchar()!='\n');
             printf("%cCu%cl es su ubicaci%cn?: ",168,160,162);
             scanf("%[^\n]",ubicacion);
             if(buscarPorUbicacion(&(*inicioM),ubicacion)== 1){
-                imprimirPorUbicacion(&(*inicioM),ubicacion);
-                printf("Seleccione la maquina que desee usar: ");
-                return;
+                do{
+                    system("cls");
+                    printf("= %s =",ubicacion);
+                    imprimirPorUbicacion(&(*inicioM),ubicacion);
+                    printf("0.-Regresar.");
+                    printf("Seleccione la maquina que desee usar: ");
+                    scanf("%d",&idM);
+                    if((auxMaquina = buscarMaquina(&(*inicioM),idM)) != NULL){
+                        imprimirContenidoM(&auxMaquina->inicioE,auxMaquina->tipo);
+                        printf("Seleccione producto: ");
+                        scanf("%[^\n]",idP);
+                        if((auxEspiral = buscarProducto(&(*inicioM)->inicioE,idP)) != NULL){
+                                despacharProducto(&auxEspiral,auxMaquina->tipo);
+                        }else{
+                            printf("\nEl producto seleccionado no es valido.");
+                            //system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
+                            system("pause");
+                        }
+                    }else{
+                        printf("\nLa maquina que ha ingresado no es valida.");
+                        //system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
+                        system("pause");
+                    }
+                }while(idM!=0);
             }else{
                 printf("No existen maquinas en su ubicaci%cn.\n",162);
                 //system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
@@ -87,34 +150,33 @@ void menuCliente(Maquina **inicioM){
         }
 }
 
-void MostrarProductos(Maquina **inicioM,int tipo, int ID){
+void MostrarProductos(Maquina *inicioM){
         printf("-------------------------------------- ");
-        printf("\n| Productos disponibles en maquina: %d |",(*inicioM)->ID);
+        printf("\n| Productos disponibles en maquina: %d |",inicioM->ID);
         printf("\n -------------------------------------- ");
-        if(tipo==1)
+        if(inicioM->tipo==1)
         printf("\n| Tipo: Refrescos                     |");
         else
         printf("\n| Tipo: Golosina                      |");
         printf("\n ------------------------------------- ");
-        //funcion imprimir productos de ID maquina
+        imprimirContenidoM(&inicioM->inicioE,inicioM->tipo);
         printf("\n");
         system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
 }
 
-void MenuProductos(Maquina **inicioM,int tipo, int ID){
-
-        int op;
+void MenuProductos(Maquina *inicioM){
+    int op;
     do{
         printf(" -------------------------------- ");
         printf("\n| Administracion de productos |");
         printf("\n -------------------------------- ");
-        printf("\n|1.-Registrar productor           |");
+        printf("\n|1.-Registrar producto           |");
         printf("\n|2.-Insertar producto             |");
         printf("\n|3.-Eliminar producto             |");
         printf("\n|4.-Mostrar productos             |");
         printf("\n|5.-Regresar                      |");
         printf("\n -------------------------------- ");
-        if(tipo==1)
+        if(inicioM->tipo==1)
         printf("\n| Tipo: Refrescos                 |");
         else
         printf("\n| Tipo: Golosina                  |");
@@ -183,12 +245,13 @@ void ComprarMaquina(Maquina **inicioM,int tipo){
                 printf("Maquina registrada con exito\n");}
         else
             printf("Maquina no creada\n");
-        system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
-        //system("pause");
+        //system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
+        system("pause");
 }
 
 
 void EstadoMaquina(Maquina **inicioM,int tipo){
+    Maquina *auxMaquina;
     if((*inicioM)==NULL){
         printf("No se han agregado maquinas\n");
         system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
@@ -205,7 +268,10 @@ void EstadoMaquina(Maquina **inicioM,int tipo){
         //funcion aqui de impresion de maquina
         printf("Seleccione el ID de una maquina: ");
         scanf("%d",&idmaquina);
-        MenuProductos(inicioM,tipo,idmaquina);
+        if((auxMaquina = buscarMaquina(&(*inicioM),idmaquina)) != NULL){//despues de la impresion de las maquinas se busca y se obtiene su posicion en la lista
+            MenuProductos(auxMaquina);//se envia puntero con posicion de la lista
+        }
+
 }
 
 void AdministrarMaquina(Maquina **inicioM,int tipo){
