@@ -71,14 +71,14 @@ void menuCliente(Maquina **inicioM){
                 return;
             }else{
                 printf("No existen maquinas en su ubicaci%cn.\n",162);
-                system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
-                //system("pause");
+                //system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
+                system("pause");
                 return;
             }
         }else{
             printf("No existen maquinas actualmente.\n");
-            system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
-            //system("pause");
+            //system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
+            system("pause");
             return;
         }
 }
@@ -87,7 +87,6 @@ void MenuProductos(Maquina **inicioM,int tipo, int ID){
 
         int op;
     do{
-         system("clear");
         printf(" -------------------------------- ");
         printf("\n| Administracion de productos |");
         printf("\n -------------------------------- ");
@@ -100,27 +99,31 @@ void MenuProductos(Maquina **inicioM,int tipo, int ID){
         printf("\n| Tipo: Refrescos                 |");
         else
         printf("\n| Tipo: Golosina                  |");
+        printf("\n -------------------------------- ");
         printf("\nElija una opci%cn: ",162);
         scanf("%d",&op);
-        system("clear");
         switch(op){
         case 1:
                 //fun registrar
-                system("clear");
+                //system("clear");
+                system("cls");
                 break;
         case 2:
                 //fun insertar
-                system("clear");
+                //system("clear");
+                system("cls");
                 break;
         case 3:
                 //fun eliminar
-                system("clear");
+                //system("clear");
+                system("cls");
                 break;
         case 4:
                 break;
         default: printf("\nOpci%cn no valida.\n",162);
-                 system("clear");
         }
+        //system("clear");
+        system("cls");
     }while(op!=4);
 }
 
@@ -139,16 +142,18 @@ void ComprarMaquina(Maquina **inicioM,int tipo){
             printf("Maquina registrada con exito\n");
         else
             printf("Maquina no creada\n");
-        system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
-        system("clear");
+        //system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
+        system("pause");
 }
 
 
 void EstadoMaquina(Maquina **inicioM,int tipo){
     if((*inicioM)==NULL){
         printf("No se han agregado maquinas\n");
-        system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
-        system("clear");
+        //system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
+        //system("clear");
+        system("pause");
+        system("cls");
         return;
     }
     int idmaquina;
@@ -160,13 +165,11 @@ void EstadoMaquina(Maquina **inicioM,int tipo){
         printf("Seleccione el ID de una maquina: ");
         scanf("%d",&idmaquina);
         MenuProductos(inicioM,tipo,idmaquina);
-        system("clear");
 }
 
 void AdministrarMaquina(Maquina **inicioM,int tipo){
         int op;
     do{
-         system("clear");
         printf(" -------------------------------- ");
         printf("\n| Registrar / Administrar Maquinas |");
         printf("\n -------------------------------- ");
@@ -178,26 +181,31 @@ void AdministrarMaquina(Maquina **inicioM,int tipo){
         printf("\n| Tipo: Refrescos                 |");
         else
         printf("\n| Tipo: Golosina                  |");
+        printf("\n -------------------------------- ");
         printf("\nElija una opci%cn: ",162);
         scanf("%d",&op);
         system("clear");
         switch(op){
         case 1:
+                //system("clear");
+                system("cls");
                 ComprarMaquina(inicioM,tipo);
-                system("clear");
                 break;
         case 2:
+                //system("clear");
+                system("cls");
                 EstadoMaquina(inicioM,tipo);
-                system("clear");
                 break;
         case 3:
-                system("clear");
+                //system("clear");
+                system("cls");
                 break;
         default:
-        system("clear");
         printf("\nOpci%cn no valida.\n",162);
 
         }
+        //system("clear");
+        system("cls");
     }while(op!=3);
 }
 
@@ -205,7 +213,6 @@ void AdministrarMaquina(Maquina **inicioM,int tipo){
 void MenuProveedor(Maquina **inicioM){
     int op;
     do{
-         system("clear");
         printf(" -------------------------------- ");
         printf("\n|     Registro de maquinas      |");
         printf("\n -------------------------------- ");
@@ -215,22 +222,25 @@ void MenuProveedor(Maquina **inicioM){
         printf("\n -------------------------------- ");
         printf("\nElija una opci%cn: ",162);
         scanf("%d",&op);
-        system("clear");
         switch(op){
         case 1:
+                //system("clear");
+                system("cls");
                 AdministrarMaquina(inicioM,1);
-                system("clear");
                 break;
         case 2:
+                //system("clear");
+                system("cls");
                 AdministrarMaquina(inicioM,2);
-                system("clear");
                 break;
         case 3:
-                system("clear");
+                //system("clear");
+                system("cls");
                 break;
         default: printf("\nOpci%cn no valida.\n",162);
-                 system("clear");
         }
+    //system("clear");
+    system("cls");
     }while(op!=3);
 }
 
@@ -239,7 +249,6 @@ int main(){
     Maquina *inicioM=NULL;
     int op;
     do{
-         system("clear");
         printf(" -------------------------------- ");
         printf("\n|             MENU                |");
         printf("\n -------------------------------- ");
@@ -249,20 +258,23 @@ int main(){
         printf("\n -------------------------------- ");
         printf("\nElija una opci%cn: ",162);
         scanf("%d",&op);
-        system("clear");
         switch(op){
         case 1:
-        system("clear");
+                //system("clear");
+                system("cls");
                 MenuProveedor(&inicioM);
                 break;
         case 2:
+                //system("clear");
+                system("cls");
                 menuCliente(&inicioM);
                 break;
         case 3: break;
-        default: system("clear");
+        default:
                 printf("\nOpci%cn no valida.\n",162);
-
         }
+    //system("clear");
+    system("cls");
     }while(op!=3);
     return 0;
 }
