@@ -15,7 +15,7 @@ typedef struct Producto{
 
 typedef struct Espiral{
     char nombre[30];
-    char ID[2];
+    char ID[3];
     int precio;
     int cantidad;
     struct Espiral *siguienteE;
@@ -63,27 +63,23 @@ void imprimirPorUbicacion(Maquina **inicio, char ubicacion[30]){
         return;
     if(strcmp(ubicacion,(*inicio)->ubicacion)== 0){
         if((*inicio)->tipo == 1 && (*inicio)->inicioE != NULL){
-            printf("%d Maquina de Refrescos.\n\tContenido: ",(*inicio)->ID);
+            printf("\n%d Maquina de Refrescos.\n\tContenido: ",(*inicio)->ID);
             imprimirContenidoM(&(*inicio)->inicioE,1);
         }
         if((*inicio)->tipo == 2 && (*inicio)->inicioE != NULL){
-            printf("%d Maquina de Golosinas.\n\tContenido: ",(*inicio)->ID);
+            printf("\n%d Maquina de Golosinas.\n\tContenido: ",(*inicio)->ID);
             imprimirContenidoM(&(*inicio)->inicioE,2);
         }
     }
     return imprimirPorUbicacion(&(*inicio)->siguienteM,ubicacion);
 }
 
-Espiral* buscarProducto(Espiral **inicio,char idP[2]){
-
+Espiral* buscarProducto(Espiral **inicio,char idP[3]){
     if(!(*inicio)){
-        printf("EL PUNTERO ES NULO!");
         return NULL;
     }
-    printf("\n%s - %s\n",(*inicio)->ID,idP);
     if(strcmp((*inicio)->ID,idP)==0){
-        printf("hola\n");
-        return (*inicio);
+            return (*inicio);
     }else{
         return buscarProducto(&(*inicio)->siguienteE,idP);
     }
@@ -112,7 +108,7 @@ void despacharProducto(Espiral **inicio, int tipo){
 
 
 void menuCliente(Maquina **inicioM){
-        char ubicacion[30],idP[2];
+        char ubicacion[30],idP[3];
         Maquina *auxMaquina;
         Espiral *auxEspiral;
         int idM;
@@ -125,22 +121,31 @@ void menuCliente(Maquina **inicioM){
                     system("cls");
                     printf("= %s =",ubicacion);
                     imprimirPorUbicacion(&(*inicioM),ubicacion);
-                    printf("0.-Regresar.");
-                    printf("Seleccione la maquina que desee usar: ");
+                    printf("\n0.-Regresar.");
+                    printf("\nSeleccione la maquina que desee usar: ");
+                    while(getchar()!='\n');
                     scanf("%d",&idM);
                     if((auxMaquina = buscarMaquina(&(*inicioM),idM)) != NULL){
+                        system("cls");
+                        printf("\t\t=CONTENIDO=");
                         imprimirContenidoM(&auxMaquina->inicioE,auxMaquina->tipo);
-                        printf("Seleccione producto: ");
+                        printf("\nSeleccione producto: ");
+                        while(getchar()!='\n');
                         scanf("%[^\n]",idP);
                         if((auxEspiral = buscarProducto(&(*inicioM)->inicioE,idP)) != NULL){
-                                despacharProducto(&auxEspiral,auxMaquina->tipo);
+                                if(!auxEspiral->tope){
+                                    printf("\nProducto agotado!\n");
+                                    system("pause");
+                                }else{
+                                    despacharProducto(&auxEspiral,auxMaquina->tipo);
+                                }
                         }else{
-                            printf("\nEl producto seleccionado no es valido.");
+                            printf("\nEl producto seleccionado no es valido.\n");
                             //system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
                             system("pause");
                         }
-                    }else{
-                        printf("\nLa maquina que ha ingresado no es valida.");
+                    }else if(idM !=0){
+                        printf("\nLa maquina que ha ingresado no es valida.\n");
                         //system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
                         system("pause");
                     }
@@ -173,15 +178,12 @@ void MostrarProductos(Maquina **inicioM,int tipo, int ID){
         system("read -n 1 -s -p \"Presiona una tecla para continuar...\"");
 }
 
-void RegistrarProducto(Maquina **inicioM, char nombre[30], int cantidad, char IDProducto[2],int precio){
-    printf("Hol1\n");
+void RegistrarProducto(Maquina **inicioM, char nombre[30], int cantidad, char IDProducto[3],int precio){
     Espiral *EspiralM= (Espiral*) malloc(sizeof(struct Espiral));
-    printf("Holi2");
     if(!EspiralM){
         printf("No se pudo reservar la memoria\n");
         return;
     }
-    printf("Holi");
     strcpy(EspiralM->nombre,nombre);
     strcpy(EspiralM->ID,IDProducto);
     EspiralM->precio=precio;
@@ -192,16 +194,16 @@ void RegistrarProducto(Maquina **inicioM, char nombre[30], int cantidad, char ID
 }
 
 void RegistroDeProductos(Maquina **inicioM){
-    char nombre[30],IDProducto[2];
+    char nombre[30],IDProducto[3];
     int cantidad,precio;
     Espiral *aux;
+        system("cls");
         printf(" -------------------------------- ");
         printf("\n| Administracion de productos |");
         printf("\n -------------------------------- ");
         while(getchar()!='\n');
         printf("\nIngrese el nombre del producto: ");
         scanf("%[^\n]",nombre);
-        printf("\n%s",nombre);
         if((*inicioM)->tipo==1)
             printf("Ingrese los ML del producto: ");
         else
@@ -211,7 +213,6 @@ void RegistroDeProductos(Maquina **inicioM){
         printf("Ingrese el precio del producto: ");
         while(getchar()!='\n');
         scanf("%d",&precio);
-
         do{
         while(getchar()!='\n');
         printf("Ingrese el ID del producto (Ej: A0): ");
@@ -220,26 +221,23 @@ void RegistroDeProductos(Maquina **inicioM){
                 printf("Tiene que iniciar con una letra\n");
             if ( IDProducto[1]<48 || IDProducto[1]>57 )
                 printf("La segunda letra debe ser un numero entre 0 y 9\n");
-          //aux=buscarProducto(&(*inicioM)->inicioE,IDProducto);
-          /*if(aux!=NULL){
+          aux=buscarProducto(&(*inicioM)->inicioE,IDProducto);
+          if(aux!=NULL){
             printf("ID repetido, ingrese otro ID\n");
+            system("pause");
             system("read -n 1 -s -p \"Presiona una tecla para re intentar...\"");
-          }*/
-        }while( (IDProducto[0]<65 || IDProducto[0]>70) || (  IDProducto[1]<48 || IDProducto[1]>57) );
-        printf("%s 1",nombre);
+          }
+        }while( aux != NULL || (IDProducto[0]<65 || IDProducto[0]>70) || (  IDProducto[1]<48 || IDProducto[1]>57) );
         RegistrarProducto(inicioM,nombre,cantidad,IDProducto,precio);
-        printf("1: %s\n",(*inicioM)->inicioE->nombre);
-        printf("1. %s\n",(*inicioM)->inicioE->ID );
+        printf("Producto registrado con exito!\n");
         system("pause");
-        //printf("2: %s\n",inicioM->inicioE->siguienteE->nombre );
-        //printf("2. %s\n",inicioM->inicioE->siguienteE->ID );
-
 }
 
 
 void MenuProductos(Maquina **inicioM){
     int op;
     do{
+        system("cls");
         printf(" -------------------------------- ");
         printf("\n| Administracion de productos |");
         printf("\n -------------------------------- ");
@@ -256,7 +254,7 @@ void MenuProductos(Maquina **inicioM){
         printf("\n -------------------------------- ");
         printf("\nElija una opci%cn: ",162);
         scanf("%d",&op);
-        switch(op){
+        switch(op){ //mandalo ;o, nel prro
         case 1:
                 RegistroDeProductos(inicioM);
                 system("clear");
@@ -273,14 +271,17 @@ void MenuProductos(Maquina **inicioM){
                 //system("cls");
                 break;
         case 4:
-                imprimirContenidoM(&(*inicioM)->inicioE,(*inicioM)->tipo);
+                system("cls");
+                printf("\t\t    =CONTENIDO=");
+                imprimirContenidoM(&(*inicioM)->inicioE,(*inicioM)->tipo);//Hago push ow
+                printf("\n");
                 system("pause");
                 system("clear");
                 //system("cls")
                 break;
         case 5:
                 break;
-        default: printf("\nOpci%cn no valida.\n",162);
+        default: printf("\nOpci%cn no valida.:\n",162);
         }
         //system("clear");
         system("cls");
